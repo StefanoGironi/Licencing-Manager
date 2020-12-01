@@ -51,8 +51,14 @@
             this.txtLicense = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.btnUseLicense = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.checkContabilità = new System.Windows.Forms.CheckBox();
+            this.checkDocumenti = new System.Windows.Forms.CheckBox();
+            this.checkManutenzioni = new System.Windows.Forms.CheckBox();
+            this.checkMagazzino = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCreaChiavi
@@ -279,11 +285,65 @@
             this.btnUseLicense.UseVisualStyleBackColor = true;
             this.btnUseLicense.Click += new System.EventHandler(this.btnUseLicense_Click);
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.checkManutenzioni);
+            this.groupBox3.Controls.Add(this.checkMagazzino);
+            this.groupBox3.Controls.Add(this.checkDocumenti);
+            this.groupBox3.Controls.Add(this.checkContabilità);
+            this.groupBox3.Location = new System.Drawing.Point(519, 287);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(302, 74);
+            this.groupBox3.TabIndex = 20;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Moduli";
+            // 
+            // checkContabilità
+            // 
+            this.checkContabilità.AutoSize = true;
+            this.checkContabilità.Location = new System.Drawing.Point(6, 19);
+            this.checkContabilità.Name = "checkContabilità";
+            this.checkContabilità.Size = new System.Drawing.Size(75, 17);
+            this.checkContabilità.TabIndex = 0;
+            this.checkContabilità.Text = "Contabilità";
+            this.checkContabilità.UseVisualStyleBackColor = true;
+            // 
+            // checkDocumenti
+            // 
+            this.checkDocumenti.AutoSize = true;
+            this.checkDocumenti.Location = new System.Drawing.Point(6, 42);
+            this.checkDocumenti.Name = "checkDocumenti";
+            this.checkDocumenti.Size = new System.Drawing.Size(77, 17);
+            this.checkDocumenti.TabIndex = 1;
+            this.checkDocumenti.Text = "Documenti";
+            this.checkDocumenti.UseVisualStyleBackColor = true;
+            // 
+            // checkManutenzioni
+            // 
+            this.checkManutenzioni.AutoSize = true;
+            this.checkManutenzioni.Location = new System.Drawing.Point(89, 42);
+            this.checkManutenzioni.Name = "checkManutenzioni";
+            this.checkManutenzioni.Size = new System.Drawing.Size(89, 17);
+            this.checkManutenzioni.TabIndex = 3;
+            this.checkManutenzioni.Text = "Manutenzioni";
+            this.checkManutenzioni.UseVisualStyleBackColor = true;
+            // 
+            // checkMagazzino
+            // 
+            this.checkMagazzino.AutoSize = true;
+            this.checkMagazzino.Location = new System.Drawing.Point(89, 19);
+            this.checkMagazzino.Name = "checkMagazzino";
+            this.checkMagazzino.Size = new System.Drawing.Size(77, 17);
+            this.checkMagazzino.TabIndex = 2;
+            this.checkMagazzino.Text = "Magazzino";
+            this.checkMagazzino.UseVisualStyleBackColor = true;
+            // 
             // LicenseManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(972, 692);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnUseLicense);
             this.Controls.Add(this.txtLicense);
             this.Controls.Add(this.label5);
@@ -305,6 +365,8 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -335,6 +397,11 @@
         private System.Windows.Forms.TextBox txtLicense;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btnUseLicense;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.CheckBox checkManutenzioni;
+        private System.Windows.Forms.CheckBox checkMagazzino;
+        private System.Windows.Forms.CheckBox checkDocumenti;
+        private System.Windows.Forms.CheckBox checkContabilità;
     }
 }
 

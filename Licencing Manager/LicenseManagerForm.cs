@@ -13,7 +13,7 @@ namespace Licencing_Manager
 {
     public partial class LicenseManagerForm : Form
     {
-        protected const string PASS_PHRASE = "G7 International s.r.l. - G7 Suite license";
+        private const string PASS_PHRASE = "G7 International s.r.l. - G7 Suite license";
 
         private Portable.Licensing.License license;
 
@@ -51,6 +51,7 @@ namespace Licencing_Manager
                     utilizzi = 1;
             }
 
+            ILicenseBuilder builder = null;
             if (tipo == LicenseType.Trial)
             {
                 int days = 30;
@@ -58,48 +59,47 @@ namespace Licencing_Manager
                 if (days <= 30)
                     days = 30;
 
-                license = Portable.Licensing.License.New()
+                builder = Portable.Licensing.License.New()
                     .WithUniqueIdentifier(Guid.NewGuid())
                     .As(tipo)
-                    .ExpiresAt(DateTime.Now.AddDays(days))
-                    .WithMaximumUtilization(utilizzi)
-                    .WithProductFeatures(new Dictionary<string, string>
-                    {
-                        {"Sales Module", "yes"},
-                        {"Purchase Module", "yes"},
-                        {"Maximum Transactions", "10000"}
-                    })
-                    .LicensedTo(txtUse.Text, txtMail.Text)
-                    .CreateAndSignWithPrivateKey(txtPrivateKey.Text, PASS_PHRASE);
+                    .ExpiresAt(DateTime.Now.AddDays(days));
             }
             else 
             {
-                license = Portable.Licensing.License.New()
+                builder = Portable.Licensing.License.New()
                     .WithUniqueIdentifier(Guid.NewGuid())
                     .As(tipo)
-                    .WithMaximumUtilization(utilizzi)
-                    .WithProductFeatures(new Dictionary<string, string>
-                    {
-                        {"Sales Module", "yes"},
-                        {"Purchase Module", "yes"},
-                        {"Maximum Transactions", "10000"}
-                    })
                     // Usare un sequence così da evitare problemi di concorrenza sul DB
                     .WithAdditionalAttributes(new Dictionary<string, string>
                     {
                         {"Used", "0"},
-                    })
-                    .LicensedTo(txtUsername.Text, txtMail.Text)
-                    .CreateAndSignWithPrivateKey(txtPrivateKey.Text, PASS_PHRASE);
+                    });
             }
-
+            license = builder.WithMaximumUtilization(utilizzi)
+                .WithProductFeatures(new Dictionary<string, string>
+                    {
+                        {"Contabilità", checkContabilità.Checked ? "1" : "0"},
+                        {"Documenti", checkDocumenti.Checked ? "1" : "0"},
+                        {"Magazzino", checkMagazzino.Checked ? "1" : "0"},
+                        {"Manutenzioni", checkManutenzioni.Checked ? "1" : "0"},
+                        {"Maximum Transactions", "10000"}
+                    })
+                .LicensedTo(txtUse.Text, txtMail.Text)
+                .CreateAndSignWithPrivateKey(txtPrivateKey.Text, PASS_PHRASE);
             txtLicense.Text = license.ToString();
         }
 
         private void btnUseLicense_Click(object sender, EventArgs e)
         {
-            UseLicenseForm f = new UseLicenseForm(txtPublicKey.Text, license);
+            UseLicenseForm f = new UseLicenseForm(txtPublicKey.Text, txtPrivateKey.Text, license);
+            f.OnLicenseValidated += F_OnLicenseValidated;
             f.Show(this);
+        }
+
+        private void F_OnLicenseValidated(object sender, EventArgs e)
+        {
+            license.Sign(txtPrivateKey.Text, PASS_PHRASE);
+            txtLicense.Text = license.ToString();
         }
     }
 }
