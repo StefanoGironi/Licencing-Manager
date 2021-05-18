@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -8,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Portable.Licensing;
+using Portable.Licensing.Security.Cryptography;
 
 namespace Licencing_Manager
 {
@@ -15,7 +15,7 @@ namespace Licencing_Manager
     {
         private const string PASS_PHRASE = "G7 International s.r.l. - G7 Suite license";
 
-        private Portable.Licensing.License license;
+        private License license;
 
         public LicenseManagerForm()
         {
@@ -24,9 +24,16 @@ namespace Licencing_Manager
 
         private void btnCreaLicenza_Click(object sender, EventArgs e)
         {
-            var keyGenerator = Portable.Licensing.Security.Cryptography.KeyGenerator.Create();
+            Guid id;
+            if (!Guid.TryParse(txtClientId.Text, out id))
+            {
+                MessageBox.Show("Id Cliente {txtClientId.Text} non valido", this.Text);
+                return;
+            }
+
+            var keyGenerator = KeyGenerator.Create();
             var keyPair = keyGenerator.GenerateKeyPair();
-            txtPrivateKey.Text = keyPair.ToEncryptedPrivateKeyString(PASS_PHRASE);
+            txtPrivateKey.Text = keyPair.ToEncryptedPrivateKeyString(PASS_PHRASE + "." + txtClientId.Text);
             txtPublicKey.Text = keyPair.ToPublicKeyString();
         }
 
@@ -50,7 +57,12 @@ namespace Licencing_Manager
                 if (utilizzi <= 0)
                     utilizzi = 1;
             }
-
+            Guid id;
+            if (!Guid.TryParse(txtClientId.Text, out id))
+            {
+                MessageBox.Show("Id Cliente {txtClientId.Text} non valido", this.Text);
+                return;
+            }
             ILicenseBuilder builder = null;
             if (tipo == LicenseType.Trial)
             {
@@ -59,20 +71,25 @@ namespace Licencing_Manager
                 if (days <= 30)
                     days = 30;
 
-                builder = Portable.Licensing.License.New()
+                builder = License.New()
                     .WithUniqueIdentifier(Guid.NewGuid())
                     .As(tipo)
-                    .ExpiresAt(DateTime.Now.AddDays(days));
+                    .ExpiresAt(DateTime.Now.AddDays(days)).WithAdditionalAttributes(new Dictionary<string, string>
+                    {
+                        {"ClientId", id.ToString()}
+                    }); ;
+
             }
             else 
             {
-                builder = Portable.Licensing.License.New()
+                builder = License.New()
                     .WithUniqueIdentifier(Guid.NewGuid())
                     .As(tipo)
                     // Usare un sequence così da evitare problemi di concorrenza sul DB
                     .WithAdditionalAttributes(new Dictionary<string, string>
                     {
                         {"Used", "0"},
+                        {"ClientId", id.ToString()}
                     });
             }
             license = builder.WithMaximumUtilization(utilizzi)
@@ -81,24 +98,23 @@ namespace Licencing_Manager
                         {"Contabilità", checkContabilità.Checked ? "1" : "0"},
                         {"Documenti", checkDocumenti.Checked ? "1" : "0"},
                         {"Magazzino", checkMagazzino.Checked ? "1" : "0"},
-                        {"Manutenzioni", checkManutenzioni.Checked ? "1" : "0"},
-                        {"Maximum Transactions", "10000"}
+                        {"Manutenzioni", checkManutenzioni.Checked ? "1" : "0"}
                     })
-                .LicensedTo(txtUse.Text, txtMail.Text)
-                .CreateAndSignWithPrivateKey(txtPrivateKey.Text, PASS_PHRASE);
+                .LicensedTo(txtUsername.Text, txtMail.Text)
+                .CreateAndSignWithPrivateKey(txtPrivateKey.Text, PASS_PHRASE + "." + txtClientId.Text);
             txtLicense.Text = license.ToString();
         }
 
         private void btnUseLicense_Click(object sender, EventArgs e)
         {
-            UseLicenseForm f = new UseLicenseForm(txtPublicKey.Text, txtPrivateKey.Text, license);
+            UseLicenseForm f = new UseLicenseForm(txtPublicKey.Text, license);
             f.OnLicenseValidated += F_OnLicenseValidated;
             f.Show(this);
         }
 
         private void F_OnLicenseValidated(object sender, EventArgs e)
         {
-            license.Sign(txtPrivateKey.Text, PASS_PHRASE);
+            license.Sign(txtPrivateKey.Text, PASS_PHRASE + "." + txtClientId.Text);
             txtLicense.Text = license.ToString();
         }
     }

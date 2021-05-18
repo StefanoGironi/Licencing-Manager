@@ -52,10 +52,12 @@
             this.label5 = new System.Windows.Forms.Label();
             this.btnUseLicense = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.checkContabilità = new System.Windows.Forms.CheckBox();
-            this.checkDocumenti = new System.Windows.Forms.CheckBox();
             this.checkManutenzioni = new System.Windows.Forms.CheckBox();
             this.checkMagazzino = new System.Windows.Forms.CheckBox();
+            this.checkDocumenti = new System.Windows.Forms.CheckBox();
+            this.checkContabilità = new System.Windows.Forms.CheckBox();
+            this.txtClientId = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -85,7 +87,6 @@
             this.txtPublicKey.Location = new System.Drawing.Point(104, 12);
             this.txtPublicKey.Multiline = true;
             this.txtPublicKey.Name = "txtPublicKey";
-            this.txtPublicKey.ReadOnly = true;
             this.txtPublicKey.Size = new System.Drawing.Size(717, 106);
             this.txtPublicKey.TabIndex = 2;
             // 
@@ -94,7 +95,6 @@
             this.txtPrivateKey.Location = new System.Drawing.Point(104, 124);
             this.txtPrivateKey.Multiline = true;
             this.txtPrivateKey.Name = "txtPrivateKey";
-            this.txtPrivateKey.ReadOnly = true;
             this.txtPrivateKey.Size = new System.Drawing.Size(717, 131);
             this.txtPrivateKey.TabIndex = 4;
             // 
@@ -298,26 +298,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Moduli";
             // 
-            // checkContabilità
-            // 
-            this.checkContabilità.AutoSize = true;
-            this.checkContabilità.Location = new System.Drawing.Point(6, 19);
-            this.checkContabilità.Name = "checkContabilità";
-            this.checkContabilità.Size = new System.Drawing.Size(75, 17);
-            this.checkContabilità.TabIndex = 0;
-            this.checkContabilità.Text = "Contabilità";
-            this.checkContabilità.UseVisualStyleBackColor = true;
-            // 
-            // checkDocumenti
-            // 
-            this.checkDocumenti.AutoSize = true;
-            this.checkDocumenti.Location = new System.Drawing.Point(6, 42);
-            this.checkDocumenti.Name = "checkDocumenti";
-            this.checkDocumenti.Size = new System.Drawing.Size(77, 17);
-            this.checkDocumenti.TabIndex = 1;
-            this.checkDocumenti.Text = "Documenti";
-            this.checkDocumenti.UseVisualStyleBackColor = true;
-            // 
             // checkManutenzioni
             // 
             this.checkManutenzioni.AutoSize = true;
@@ -338,11 +318,49 @@
             this.checkMagazzino.Text = "Magazzino";
             this.checkMagazzino.UseVisualStyleBackColor = true;
             // 
+            // checkDocumenti
+            // 
+            this.checkDocumenti.AutoSize = true;
+            this.checkDocumenti.Location = new System.Drawing.Point(6, 42);
+            this.checkDocumenti.Name = "checkDocumenti";
+            this.checkDocumenti.Size = new System.Drawing.Size(77, 17);
+            this.checkDocumenti.TabIndex = 1;
+            this.checkDocumenti.Text = "Documenti";
+            this.checkDocumenti.UseVisualStyleBackColor = true;
+            // 
+            // checkContabilità
+            // 
+            this.checkContabilità.AutoSize = true;
+            this.checkContabilità.Location = new System.Drawing.Point(6, 19);
+            this.checkContabilità.Name = "checkContabilità";
+            this.checkContabilità.Size = new System.Drawing.Size(75, 17);
+            this.checkContabilità.TabIndex = 0;
+            this.checkContabilità.Text = "Contabilità";
+            this.checkContabilità.UseVisualStyleBackColor = true;
+            // 
+            // txtClientId
+            // 
+            this.txtClientId.Location = new System.Drawing.Point(511, 261);
+            this.txtClientId.Name = "txtClientId";
+            this.txtClientId.Size = new System.Drawing.Size(310, 20);
+            this.txtClientId.TabIndex = 22;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(466, 264);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(39, 13);
+            this.label6.TabIndex = 21;
+            this.label6.Text = "Cliente";
+            // 
             // LicenseManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(972, 692);
+            this.Controls.Add(this.txtClientId);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnUseLicense);
             this.Controls.Add(this.txtLicense);
@@ -402,6 +420,8 @@
         private System.Windows.Forms.CheckBox checkMagazzino;
         private System.Windows.Forms.CheckBox checkDocumenti;
         private System.Windows.Forms.CheckBox checkContabilità;
+        private System.Windows.Forms.TextBox txtClientId;
+        private System.Windows.Forms.Label label6;
     }
 }
 

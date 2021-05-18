@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -15,20 +14,18 @@ namespace Licencing_Manager
     public partial class UseLicenseForm : Form
     {
         public event EventHandler OnLicenseValidated = null;
-        private Portable.Licensing.License license;
-        private string privateKey;
+        private License license;
 
-        public UseLicenseForm()
+        private UseLicenseForm()
         {
             InitializeComponent();
         }
 
-        public UseLicenseForm(string publickKey, string privateKey, Portable.Licensing.License license)
+        public UseLicenseForm(string publickKey, License license)
         {
             InitializeComponent();
             txtPublicKey.Text = publickKey;
             this.license = license;
-            this.privateKey = privateKey;
         }
 
         private void btnActivate_Click(object sender, EventArgs e)
@@ -37,7 +34,15 @@ namespace Licencing_Manager
             // Usare un sequence così da evitare problemi di concorrenza sul DB
             int used = int.Parse(license.AdditionalAttributes.Get("Used"));
 
-            string hash = $"{Environment.MachineName}.{txtUsername.Text}.{txtMail.Text}".GetHashCode().ToString();
+            Guid id;
+            if (!Guid.TryParse(txtLicenseID.Text, out id) || license.Id != id)
+            {
+                listValidation.Items.Add($"ID Licenza {txtLicenseID.Text} non valido");
+                return;
+            }
+
+            string host = $"{Environment.MachineName}{(SystemInformation.TerminalServerSession ? "." + Environment.UserName : string.Empty)}";
+            string hash = host.GetHashCode().ToString();
             if (license.AdditionalAttributes.Get(hash) == null)
             {
                 if (license.Type == LicenseType.Trial)
@@ -68,9 +73,9 @@ namespace Licencing_Manager
                 if (listValidation.Items.Count == 0)
                 {
                     used++;
-                    license.AdditionalAttributes.RemoveAll();
+                    license.AdditionalAttributes.Remove("Used");
                     license.AdditionalAttributes.Add("Used", used.ToString());
-                    license.AdditionalAttributes.Add(hash, "1");
+                    license.AdditionalAttributes.Add(hash, $"1 - {host}\t{txtUsername.Text}: {txtMail.Text}");
                     bool validL = license.VerifySignature(txtPublicKey.Text);
 
                     OnLicenseValidated?.Invoke(null, EventArgs.Empty);
